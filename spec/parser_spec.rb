@@ -212,6 +212,13 @@ RSpec.describe Hcl2::Parser do
   specify { expect(parser.string).to parse('"zh:2014b397dd93fa55f2f2d1338c19e5b2b77b025a76a6b1fceea0b8696e984b9c"') }
 
   specify do
+    expect(parser.empty_array).to parse(<<~HCL.chomp)
+      [
+      ]
+    HCL
+  end
+
+  specify do
     expect(parser.whitespace).to parse(<<~HCL)
       /*
         This is a multi-line comment
@@ -348,9 +355,9 @@ RSpec.describe Hcl2::Parser do
         HCL
       end
 
-      pending "parses multiple empty blocks" do
+      it "parses multiple empty blocks" do
         expect(subject[:blocks]).to match_array([
-          { type: "provider", name: "thingy", arguments: [{ name: "names", values: [] }] },
+          { type: "provider", name: "thingy", arguments: [{ name: "names" }] },
         ])
       end
     end

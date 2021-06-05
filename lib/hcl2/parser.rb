@@ -71,12 +71,16 @@ module Hcl2
       whitespace? >> string >> comma.maybe >> eol
     end
 
+    rule :empty_array do
+      lbracket >> eol >> eol >> rbracket
+    end
+
     rule :array do
       lbracket >> eol >> array_item.repeat >> whitespace >> rbracket
     end
 
     rule :argument_value do
-      (array.as(:values) | string) >> eol
+      (empty_array | array.as(:values) | string) >> eol
     end
 
     rule :argument do
