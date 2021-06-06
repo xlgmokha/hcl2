@@ -124,6 +124,89 @@ RSpec.describe Hcl2::Parser do
         ])
       end
     end
+
+    context "when parsing a module with a git source" do
+      let(:content) do
+        <<~HCL
+          module "origin_label" {
+            source     = "git::https://github.com/cloudposse/terraform-null-label.git?ref=tags/0.3.7"
+          }
+        HCL
+      end
+
+      pending { expect(subject).to be_truthy }
+    end
+
+    context "when parsing a module with an argument assignment via string interpolation" do
+      let(:content) do
+        <<~HCL
+          module "origin_label" {
+            namespace  = "${var.namespace}"
+          }
+        HCL
+      end
+
+      pending { expect(subject).to be_truthy }
+    end
+
+    context "when parsing a module with an argument assigned to a single line array declaration" do
+      let(:content) do
+        <<~HCL
+          module "origin_label" {
+            attributes = ["${compact(concat(var.attributes, list("origin")))}"]
+          }
+        HCL
+      end
+
+      pending { expect(subject).to be_truthy }
+    end
+
+    context "when parsing a resource with multiple names" do
+      let(:content) do
+        <<~HCL
+          resource "aws_cloudfront_origin_access_identity" "default" {
+            comment = "${module.distribution_label.id}"
+          }
+        HCL
+      end
+
+      pending { expect(subject).to be_truthy }
+    end
+
+    context "when parsing a resource with a nested block" do
+      let(:content) do
+        <<~HCL
+          resource "aws_cloudfront_distribution" "default" {
+            enabled             = "${var.enabled}"
+            is_ipv6_enabled     = "${var.is_ipv6_enabled}"
+            comment             = "${var.comment}"
+            default_root_object = "${var.default_root_object}"
+            price_class         = "${var.price_class}"
+
+            logging_config = {
+              include_cookies = "${var.log_include_cookies}"
+              bucket          = "${module.logs.bucket_domain_name}"
+              prefix          = "${var.log_prefix}"
+            }
+          }
+        HCL
+      end
+
+      pending { expect(subject).to be_truthy }
+    end
+
+    context "when parsing a resource with an assignment to another variable" do
+      let(:content) do
+        <<~HCL
+          module "distribution_label" {
+            source     = "bitbucket.org/cloudposse/terraform-null-label.git"
+            namespace  = var.namespace
+          }
+        HCL
+      end
+
+      pending { expect(subject).to be_truthy }
+    end
   end
 
   describe "#version_assignment" do
