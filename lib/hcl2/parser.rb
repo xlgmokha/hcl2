@@ -23,12 +23,14 @@ module Hcl2
     rule(:plus) { str("+") }
     rule(:pre_release) { hyphen >> (alpha | digit).repeat }
     rule(:pre_release?) { pre_release.maybe }
+    rule(:question_mark) { str("?") }
     rule(:quote) { str('"') }
     rule(:rbracket) { str("]") }
     rule(:rcurly) { str("}") }
     rule(:slash) { str("/") }
     rule(:space) { match('\s') }
     rule(:tilda_wacka) { str("~>") }
+    rule(:underscore) { str("_") }
     rule(:version) { number >> dot >> number >> dot >> number >> pre_release? }
     rule(:whitespace) { (multiline_comment | comment | space).repeat }
     rule(:whitespace?) { whitespace.maybe }
@@ -63,7 +65,7 @@ module Hcl2
 
     rule :string do
       quote >> (
-        digit | dot | alpha | str("~> ") | slash | colon | assign | plus
+        digit | dot | alpha | str("~> ") | slash | colon | assign | plus | hyphen | question_mark | assign
       ).repeat(1).as(:value) >> quote
     end
 
@@ -84,7 +86,7 @@ module Hcl2
     end
 
     rule :argument do
-      whitespace >> alpha.repeat(1).as(:name) >> whitespace >> assign >> whitespace >> argument_value
+      whitespace >> (alpha).repeat(1).as(:name) >> whitespace >> assign >> whitespace >> argument_value
     end
 
     rule :block_body do
@@ -92,7 +94,7 @@ module Hcl2
     end
 
     rule :identifier do
-      whitespace >> quote >> (alpha | dot | slash).repeat(1).as(:name) >> quote >> whitespace
+      whitespace >> quote >> (alpha | dot | slash | underscore).repeat(1).as(:name) >> quote >> whitespace
     end
 
     rule :block do

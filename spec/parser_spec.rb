@@ -134,7 +134,14 @@ RSpec.describe Hcl2::Parser do
         HCL
       end
 
-      pending { expect(subject).to be_truthy }
+      specify { expect(subject).to be_truthy }
+
+      specify do
+        expect(subject[:blocks][0][:type].to_s).to eq("module")
+        expect(subject[:blocks][0][:name].to_s).to eq("origin_label")
+        expect(subject[:blocks][0][:arguments][0][:name].to_s).to eq("source")
+        expect(subject[:blocks][0][:arguments][0][:value].to_s).to eq("git::https://github.com/cloudposse/terraform-null-label.git?ref=tags/0.3.7")
+      end
     end
 
     context "when parsing a module with an argument assignment via string interpolation" do
