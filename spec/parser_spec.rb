@@ -153,7 +153,7 @@ RSpec.describe Hcl2::Parser do
         HCL
       end
 
-      pending { expect(subject).to be_truthy }
+      specify { expect(subject).to be_truthy }
     end
 
     context "when parsing a module with an argument assigned to a single line array declaration" do

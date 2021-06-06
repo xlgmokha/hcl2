@@ -9,6 +9,7 @@ module Hcl2
     rule(:comment) { (str("#") | str("//")) >> ((str("\n") >> str("\r").maybe).absent? >> any).repeat >> eol }
     rule(:crlf) { match('[\r\n]') }
     rule(:digit) { match('\d') }
+    rule(:dollar) { str("$") }
     rule(:dot) { str(".") }
     rule(:eol) { whitespace? >> crlf.repeat }
     rule(:greater_than_or_equal_to) { str(">=") }
@@ -65,7 +66,7 @@ module Hcl2
 
     rule :string do
       quote >> (
-        digit | dot | alpha | str("~> ") | slash | colon | assign | plus | hyphen | question_mark | assign
+        digit | dot | alpha | str("~> ") | slash | colon | assign | plus | hyphen | question_mark | assign | lcurly | rcurly | dollar
       ).repeat(1).as(:value) >> quote
     end
 
